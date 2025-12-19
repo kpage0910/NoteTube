@@ -26,6 +26,10 @@ export type Intent = "learn" | "reference" | "action" | "skim";
  * Get or create OpenAI client (lazy initialization)
  */
 function getOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY environment variable is not configured");
+  }
+
   return new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });

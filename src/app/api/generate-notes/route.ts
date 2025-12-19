@@ -20,7 +20,41 @@ import { generateNotes, Intent } from "@/lib/notes";
 
 const validIntents: Intent[] = ["learn", "reference", "action", "skim"];
 
+// Simple in-memory rate limiting
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 5; // requests per window
+const RATE_WINDOW = 60 * 1000; // 1 minute
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const userLimit = rateLimitMap.get(ip);
+
+  if (!userLimit || now > userLimit.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_WINDOW });
+    return true;
+  }
+
+  if (userLimit.count >= RATE_LIMIT) {
+    return false;
+  }
+
+  userLimit.count++;
+  return true;
+}
+
 export async function POST(request: NextRequest) {
+  // Rate limiting
+  const ip =
+    request.headers.get("x-forwarded-for") ||
+    request.headers.get("x-real-ip") ||
+    "unknown";
+  if (!checkRateLimit(ip)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a minute." },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { url, intent } = body;

@@ -24,5 +24,10 @@ RUN npm run build
 EXPOSE 3000
 
 ENV PORT=3000
+ENV NODE_ENV=production
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s \
+  CMD curl -f http://localhost:3000/ || exit 1
 
 CMD ["npm", "start"]
