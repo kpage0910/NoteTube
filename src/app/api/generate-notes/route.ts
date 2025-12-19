@@ -6,12 +6,14 @@
  *
  * Flow:
  * 1. Receives a YouTube URL and user intent (learn, reference, action, skim)
- * 2. Validates the input
- * 3. Calls getTranscript() to extract the video's captions
- * 4. Calls generateNotes() to transform the transcript into structured notes
- * 5. Returns the generated notes or an appropriate error
+ * 2. Rate limits requests (5 per minute per IP) to prevent API abuse
+ * 3. Validates the input
+ * 4. Calls getTranscript() to extract the video's captions
+ * 5. Calls generateNotes() to transform the transcript into structured notes
+ * 6. Returns the generated notes or an appropriate error
  *
- * Without this route, the frontend and backend logic would have no connection.
+ * Rate limiting uses simple in-memory tracking and resets every minute.
+ * Environment validation ensures OpenAI API key is configured before processing.
  */
 
 import { NextRequest, NextResponse } from "next/server";

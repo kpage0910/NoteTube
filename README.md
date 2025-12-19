@@ -80,8 +80,6 @@ To run this project locally, you'll need:
 
 - **Custom intent prompts**: Users could theoretically want to define their own note format. I chose to constrain the options to four well-defined intents. Constraints often make tools more useful, not less.
 
-- **Rate limiting and usage tracking**: Important for production, but premature for an MVP. Adding this would mean adding a database, which changes the project's complexity profile significantly.
-
 **What I chose to prioritize:**
 
 - Clear separation between transcript extraction and note generation
@@ -91,9 +89,16 @@ To run this project locally, you'll need:
 
 ## Project Status
 
-This is a working MVP. The core loop functions end-to-end: you can paste a YouTube URL, select an intent, and receive generated notes.
+This is a working MVP ready for deployment. The core loop functions end-to-end: you can paste a YouTube URL, select an intent, and receive generated notes.
 
-It is not production-ready. There's no rate limiting, no error monitoring, and no deployment configuration. It runs locally and serves its purpose as a proof of concept and portfolio piece.
+**Production readiness features:**
+
+- **Rate limiting**: 5 requests per minute per IP address to prevent API abuse
+- **Environment validation**: Checks for required OpenAI API key at runtime
+- **Docker deployment**: Dockerfile configured with healthchecks for Railway/container platforms
+- **Error handling**: Comprehensive error mapping with appropriate HTTP status codes
+
+The application is configured for Railway deployment with automatic healthchecks and restart policies. While it lacks advanced monitoring and analytics, it has the essential protections needed for public use.
 
 ## Future Improvements
 
@@ -102,5 +107,5 @@ If I continue developing this project, these are the realistic next steps:
 - **Transcript caching**: Store transcripts temporarily to avoid re-fetching for the same video with different intents
 - **Better VTT parsing**: The current parser handles common cases but could be more robust with edge cases in auto-generated captions
 - **Response streaming**: Improve perceived performance by streaming the AI response as it generates
-- **Basic rate limiting**: Prevent abuse without requiring a full database setup
+- **Usage analytics**: Track request patterns and popular intents without requiring user accounts
 - **Timestamp mapping**: Link notes back to specific points in the video (requires more sophisticated transcript parsing)

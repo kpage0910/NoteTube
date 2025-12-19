@@ -5,6 +5,7 @@
  * It transforms raw video transcripts into structured, useful notes.
  *
  * Key responsibilities:
+ * - Validates OpenAI API key is configured before processing
  * - Defines intent-specific prompts (learn, reference, action, skim)
  * - Calls OpenAI's chat completion API with the transcript
  * - Returns formatted Markdown notes tailored to the user's goal
