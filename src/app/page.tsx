@@ -21,8 +21,7 @@ export default function Home() {
         <section className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 pb-20 sm:pt-28 sm:pb-32 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-zinc-900 tracking-tight leading-tight">
             Turn YouTube videos into
-            <br className="hidden sm:block" />
-            structured notes
+            <br className="hidden sm:block" /> structured notes
           </h1>
           <p className="mt-6 text-lg sm:text-xl text-zinc-500 max-w-xl mx-auto leading-relaxed">
             Stop rewatching. Get notes tailored to how you actually want to use
