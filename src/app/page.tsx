@@ -1,171 +1,169 @@
-"use client";
-
-import { useState } from "react";
-
-type Intent = "learn" | "reference" | "action" | "skim";
-
-const intentOptions: { value: Intent; label: string; description: string }[] = [
-  { value: "learn", label: "Learn", description: "Structured study notes" },
-  {
-    value: "reference",
-    label: "Reference",
-    description: "Key facts & definitions",
-  },
-  {
-    value: "action",
-    label: "Action",
-    description: "Step-by-step instructions",
-  },
-  { value: "skim", label: "Skim", description: "Brief overview" },
-];
+import Link from "next/link";
 
 export default function Home() {
-  const [url, setUrl] = useState("");
-  const [intent, setIntent] = useState<Intent>("learn");
-  const [notes, setNotes] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setNotes("");
-    setLoading(true);
-
-    try {
-      const response = await fetch("/api/generate-notes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, intent }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong");
-      }
-
-      setNotes(data.notes);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function handleDownload() {
-    const blob = new Blob([notes], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "notes.txt";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-      <main className="mx-auto max-w-3xl px-4 py-12">
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">
-          NoteTube
-        </h1>
-        <p className="text-zinc-600 dark:text-zinc-400 mb-8">
-          Transform any YouTube video into structured, intent-based notes.
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-6 mb-8">
-          {/* URL Input */}
-          <div>
-            <label
-              htmlFor="url"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
-            >
-              YouTube URL
-            </label>
-            <input
-              type="url"
-              id="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://www.youtube.com/watch?v=..."
-              required
-              className="w-full px-4 py-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-
-          {/* Intent Selection */}
-          <div>
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
-              What&apos;s your intent?
-            </label>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {intentOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => setIntent(option.value)}
-                  className={`p-3 rounded-lg border text-left transition-colors ${
-                    intent === option.value
-                      ? "border-blue-500 bg-blue-50 dark:bg-blue-950"
-                      : "border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-600"
-                  }`}
-                >
-                  <span
-                    className={`block font-medium ${
-                      intent === option.value
-                        ? "text-blue-700 dark:text-blue-300"
-                        : "text-zinc-900 dark:text-zinc-100"
-                    }`}
-                  >
-                    {option.label}
-                  </span>
-                  <span className="block text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-                    {option.description}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading || !url}
-            className="w-full py-3 px-4 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    <div className="min-h-screen bg-white font-[family-name:var(--font-geist-sans)]">
+      {/* Navigation — Minimal header with logo and CTA */}
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-zinc-100">
+        <div className="mx-auto max-w-5xl px-6 h-14 flex items-center justify-between">
+          <span className="text-sm font-semibold text-zinc-900">NoteTube</span>
+          <Link
+            href="/app"
+            className="px-4 py-1.5 rounded-md bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80"
           >
-            {loading ? "Generating..." : "Generate Notes"}
-          </button>
-        </form>
+            Try it free
+          </Link>
+        </div>
+      </header>
 
-        {/* Error Display */}
-        {error && (
-          <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 mb-8">
-            <p className="text-red-700 dark:text-red-300">{error}</p>
+      <main>
+        {/* Hero — Large headline, clear value prop, primary CTA */}
+        <section className="mx-auto max-w-3xl px-6 pt-20 pb-24 sm:pt-28 sm:pb-32 text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-zinc-900 tracking-tight leading-tight">
+            Turn YouTube videos into
+            <br className="hidden sm:block" />
+            structured notes
+          </h1>
+          <p className="mt-6 text-lg sm:text-xl text-zinc-500 max-w-xl mx-auto leading-relaxed">
+            Stop rewatching. Get notes tailored to how you actually want to use
+            the content.
+          </p>
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/app"
+              className="px-6 py-3 rounded-lg bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80"
+            >
+              Try NoteTube — it&apos;s free
+            </Link>
+            <a
+              href="#how-it-works"
+              className="px-6 py-3 rounded-lg text-zinc-600 text-sm font-medium transition-colors hover:text-zinc-900"
+            >
+              See how it works
+            </a>
           </div>
-        )}
+        </section>
 
-        {/* Notes Display */}
-        {notes && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-                Generated Notes
-              </h2>
-              <button
-                onClick={handleDownload}
-                className="px-4 py-2 text-sm rounded-lg border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        {/* Problem Statement — Subtle background, centered text */}
+        <section className="bg-zinc-50 border-y border-zinc-100">
+          <div className="mx-auto max-w-2xl px-6 py-16 sm:py-20 text-center">
+            <p className="text-base sm:text-lg text-zinc-600 leading-relaxed">
+              Most videos take longer to watch than the information inside them
+              deserves. People come to videos with different goals—learning
+              something new, finding a specific answer, following instructions,
+              or just getting the gist. Notes should reflect those goals.
+            </p>
+          </div>
+        </section>
+
+        {/* How It Works — Three-step grid with numbered cards */}
+        <section
+          id="how-it-works"
+          className="mx-auto max-w-5xl px-6 py-20 sm:py-28"
+        >
+          <h2 className="text-xs font-medium text-zinc-400 uppercase tracking-widest text-center mb-12">
+            How it works
+          </h2>
+          <div className="grid gap-6 sm:grid-cols-3">
+            {[
+              {
+                step: "1",
+                title: "Paste a link",
+                description: "Drop any YouTube URL with captions",
+              },
+              {
+                step: "2",
+                title: "Choose your intent",
+                description: "Select how you want to use the content",
+              },
+              {
+                step: "3",
+                title: "Get your notes",
+                description: "Receive structured notes in seconds",
+              },
+            ].map((item) => (
+              <div
+                key={item.step}
+                className="p-6 rounded-xl border border-zinc-100 bg-white"
               >
-                Download .txt
-              </button>
-            </div>
-            <div className="p-6 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-              <pre className="whitespace-pre-wrap text-zinc-800 dark:text-zinc-200 text-sm leading-relaxed font-sans">
-                {notes}
-              </pre>
-            </div>
+                <div className="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-sm font-semibold text-zinc-600 mb-4">
+                  {item.step}
+                </div>
+                <h3 className="text-base font-medium text-zinc-900 mb-1">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-zinc-500">{item.description}</p>
+              </div>
+            ))}
           </div>
-        )}
+        </section>
+
+        {/* Intent Types — Feature cards grid */}
+        <section className="mx-auto max-w-5xl px-6 pb-20 sm:pb-28">
+          <h2 className="text-xs font-medium text-zinc-400 uppercase tracking-widest text-center mb-12">
+            Choose your intent
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                name: "Learn",
+                description:
+                  "Understand the material with explanations and examples",
+              },
+              {
+                name: "Reference",
+                description: "Find facts, definitions, and key points quickly",
+              },
+              {
+                name: "Action",
+                description: "Get step-by-step instructions to follow along",
+              },
+              {
+                name: "Overview",
+                description: "Skim the main ideas without the details",
+              },
+            ].map((intent) => (
+              <div
+                key={intent.name}
+                className="p-5 rounded-xl border border-zinc-100 bg-zinc-50/50 hover:border-zinc-200 transition-colors"
+              >
+                <h3 className="text-sm font-medium text-zinc-900 mb-1.5">
+                  {intent.name}
+                </h3>
+                <p className="text-sm text-zinc-500 leading-relaxed">
+                  {intent.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Final CTA — Simple centered section */}
+        <section className="bg-zinc-50 border-t border-zinc-100">
+          <div className="mx-auto max-w-3xl px-6 py-20 sm:py-28 text-center">
+            <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 tracking-tight mb-4">
+              Ready to try it?
+            </h2>
+            <p className="text-base text-zinc-500 mb-8">
+              No account required. Just paste a link and go.
+            </p>
+            <Link
+              href="/app"
+              className="inline-block px-6 py-3 rounded-lg bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80"
+            >
+              Try NoteTube — it&apos;s free
+            </Link>
+          </div>
+        </section>
       </main>
+
+      {/* Footer — Minimal */}
+      <footer className="border-t border-zinc-100">
+        <div className="mx-auto max-w-5xl px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-sm text-zinc-400">NoteTube</span>
+          <span className="text-sm text-zinc-400">Built for learners.</span>
+        </div>
+      </footer>
     </div>
   );
 }

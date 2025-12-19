@@ -35,7 +35,7 @@ The architecture is straightforward:
 
 **Backend**: A single API route (\`/api/generate-notes\`) that orchestrates the two core operations:
 
-- Transcript extraction via \`yt-dlp\`, a command-line tool that pulls subtitles from YouTube. The system attempts English captions first, falls back to auto-generated captions, and handles cleanup of temporary VTT files.
+- Transcript extraction via \`yt-dlp\`, a command-line tool that pulls subtitles from YouTube. The system downloads English captions (both manual and auto-generated), matches multiple English language variants (en, en-US, en-GB, en-orig), and falls back to other available languages if English isn't available. Temporary VTT files are cleaned up after processing.
 - Note generation via OpenAI's API. Each intent (learn, reference, action, skim) has a dedicated system prompt that shapes how the model structures the output.
 
 **Data Flow**: URL and intent go in, notes come out. There's no persistence layer. The transcript is processed in memory and discarded after the response is sent.
@@ -53,6 +53,16 @@ The architecture is straightforward:
 | Transcript | yt-dlp                   | Reliable, actively maintained, handles YouTube's caption formats        |
 
 No database. No authentication. No state management library. These weren't forgotten; they weren't needed for the core loop.
+
+## Setup Requirements
+
+To run this project locally, you'll need:
+
+- Node.js and npm (for the Next.js application)
+- yt-dlp installed on your system: `pip install yt-dlp`
+- An OpenAI API key (set as `OPENAI_API_KEY` environment variable)
+
+**Important**: Keep yt-dlp updated to ensure compatibility with YouTube's latest API changes. YouTube frequently updates their caption system, and older versions of yt-dlp may fail to detect available captions. Run `pip install --upgrade yt-dlp` periodically, especially if you encounter caption extraction issues.
 
 ## Design Decisions and Tradeoffs
 

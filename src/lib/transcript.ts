@@ -1,3 +1,24 @@
+/**
+ * Transcript Extraction Module
+ *
+ * This module handles extracting transcripts from YouTube videos using yt-dlp.
+ * It's the foundation of the app—without a transcript, there's nothing to generate notes from.
+ *
+ * Key responsibilities:
+ * - Extracts video IDs from various YouTube URL formats
+ * - Downloads subtitle files using yt-dlp (prefers English, falls back to other languages)
+ * - Parses VTT (WebVTT) subtitle format into clean plain text
+ * - Manages temporary file creation and cleanup
+ *
+ * The extraction process:
+ * 1. Parse the YouTube URL to get the video ID
+ * 2. Use yt-dlp to download auto-generated or manual captions
+ * 3. Parse the VTT file to extract just the spoken text
+ * 4. Clean up temporary files and return the transcript
+ *
+ * Requires: yt-dlp must be installed on the system (brew install yt-dlp)
+ */
+
 import { execSync } from "child_process";
 import { readFileSync, unlinkSync, existsSync } from "fs";
 import { join } from "path";
@@ -30,7 +51,6 @@ function extractVideoId(url: string): string | null {
 function parseVTT(vttContent: string): string {
   const lines = vttContent.split("\n");
   const textLines: string[] = [];
-  let skipNext = false;
 
   for (const line of lines) {
     const trimmed = line.trim();
@@ -46,7 +66,6 @@ function parseVTT(vttContent: string): string {
 
     // Skip timestamp lines (e.g., "00:00:00.000 --> 00:00:05.000")
     if (trimmed.includes("-->")) {
-      skipNext = false;
       continue;
     }
 
@@ -98,21 +117,27 @@ export async function getTranscript(url: string): Promise<string> {
     // Try to download English subtitles (both manual and auto-generated)
     try {
       execSync(
-        `yt-dlp --write-auto-sub --write-sub --sub-langs "en" --skip-download --sub-format vtt -o "${tempPath}" "https://www.youtube.com/watch?v=${videoId}"`,
+        `yt-dlp --write-auto-sub --write-sub --sub-langs "en.*" --skip-download --sub-format vtt -o "${tempPath}" "https://www.youtube.com/watch?v=${videoId}"`,
         { encoding: "utf-8", timeout: 60000, stdio: "pipe" }
       );
 
-      // Check for English subtitle file
-      const enFile = `${tempPath}.en.vtt`;
-      if (existsSync(enFile)) {
-        subtitleFile = enFile;
-      }
+      // Check for English subtitle file (any variant)
+      const possibleFiles = [
+        `${tempPath}.en.vtt`,
+        `${tempPath}.en-US.vtt`,
+        `${tempPath}.en-GB.vtt`,
+        `${tempPath}.en-orig.vtt`,
+      ];
+      subtitleFile = possibleFiles.find((f) => existsSync(f)) || null;
     } catch (e) {
       // Command might fail but still create the file
-      const enFile = `${tempPath}.en.vtt`;
-      if (existsSync(enFile)) {
-        subtitleFile = enFile;
-      }
+      const possibleFiles = [
+        `${tempPath}.en.vtt`,
+        `${tempPath}.en-US.vtt`,
+        `${tempPath}.en-GB.vtt`,
+        `${tempPath}.en-orig.vtt`,
+      ];
+      subtitleFile = possibleFiles.find((f) => existsSync(f)) || null;
     }
 
     // If no English, try to get any available subtitle

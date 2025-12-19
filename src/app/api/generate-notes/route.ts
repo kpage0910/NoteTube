@@ -1,3 +1,19 @@
+/**
+ * API Route: /api/generate-notes
+ *
+ * This is the main orchestration endpoint for the NoteTube application.
+ * It connects the frontend to the transcript extraction and note generation logic.
+ *
+ * Flow:
+ * 1. Receives a YouTube URL and user intent (learn, reference, action, skim)
+ * 2. Validates the input
+ * 3. Calls getTranscript() to extract the video's captions
+ * 4. Calls generateNotes() to transform the transcript into structured notes
+ * 5. Returns the generated notes or an appropriate error
+ *
+ * Without this route, the frontend and backend logic would have no connection.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { getTranscript } from "@/lib/transcript";
 import { generateNotes, Intent } from "@/lib/notes";

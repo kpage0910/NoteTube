@@ -1,3 +1,23 @@
+/**
+ * Notes Generation Module
+ *
+ * This module handles AI-powered note generation using OpenAI's API.
+ * It transforms raw video transcripts into structured, useful notes.
+ *
+ * Key responsibilities:
+ * - Defines intent-specific prompts (learn, reference, action, skim)
+ * - Calls OpenAI's chat completion API with the transcript
+ * - Returns formatted Markdown notes tailored to the user's goal
+ *
+ * The four intents serve different use cases:
+ * - learn: Detailed study notes with explanations and key concepts
+ * - reference: Quick-lookup bullet points and facts
+ * - action: Step-by-step instructions and how-to guides
+ * - skim: Ultra-brief summary for quick understanding
+ *
+ * This is where raw transcripts become valuable, structured knowledge.
+ */
+
 import OpenAI from "openai";
 
 export type Intent = "learn" | "reference" | "action" | "skim";
