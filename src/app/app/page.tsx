@@ -58,7 +58,6 @@ export default function AppPage() {
 
   return (
     <div className="min-h-screen bg-white font-[family-name:var(--font-geist-sans)]">
-
       {/* Header — Minimal, just navigation back */}
       <header className="border-b border-zinc-100">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 py-4 sm:py-5">
@@ -72,7 +71,6 @@ export default function AppPage() {
       </header>
 
       <main className="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
-
         {/* Page Title */}
         <div className="mb-8 sm:mb-10">
           <h1 className="text-xl sm:text-2xl font-semibold text-zinc-900 tracking-tight">
@@ -84,7 +82,6 @@ export default function AppPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
-
           {/* URL Input */}
           <div>
             <label
@@ -123,9 +120,7 @@ export default function AppPage() {
                 >
                   <span
                     className={`block text-sm font-medium ${
-                      intent === option.value
-                        ? "text-white"
-                        : "text-zinc-900"
+                      intent === option.value ? "text-white" : "text-zinc-900"
                     }`}
                   >
                     {option.label}
@@ -182,7 +177,6 @@ export default function AppPage() {
             </div>
           </div>
         )}
-
       </main>
     </div>
   );
