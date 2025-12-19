@@ -18,6 +18,40 @@ export default function AppPage() {
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  /**
+   * Converts Markdown-formatted notes to plain text with Unicode formatting.
+   * Strips Markdown syntax (headers, bold, italic, code) and replaces bullet
+   * markers with Unicode bullet points (•) for maximum compatibility when
+   * pasted into applications like Word, Google Docs, or Apple Notes.
+   */
+  function convertMarkdownToPlainText(markdown: string): string {
+    let text = markdown;
+
+    // Remove headers (# ## ### etc.)
+    text = text.replace(/^#{1,6}\s+(.+)$/gm, "$1");
+
+    // Convert bullet points (-, *, +) to bullet character
+    text = text.replace(/^(\s*)[*\-+]\s+/gm, "$1• ");
+
+    // Remove bold (**text**)
+    text = text.replace(/\*\*(.+?)\*\*/g, "$1");
+
+    // Remove italic (*text* or _text_)
+    text = text.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, "$1");
+    text = text.replace(/_(.+?)_/g, "$1");
+
+    // Remove code backticks
+    text = text.replace(/`([^`]+)`/g, "$1");
+
+    // Remove code blocks
+    text = text.replace(/```[\s\S]*?```/g, (match) => {
+      return match.replace(/```\w*\n?/g, "").trim();
+    });
+
+    return text.trim();
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -46,14 +80,20 @@ export default function AppPage() {
     }
   }
 
-  function handleDownload() {
-    const blob = new Blob([notes], { type: "text/plain" });
-    const downloadUrl = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = downloadUrl;
-    a.download = "notes.txt";
-    a.click();
-    URL.revokeObjectURL(downloadUrl);
+  /**
+   * Copies notes to clipboard as plain text.
+   * Converts Markdown formatting to Unicode characters before copying,
+   * shows temporary "Copied!" feedback, and handles clipboard API errors.
+   */
+  async function handleCopy() {
+    try {
+      const plainText = convertMarkdownToPlainText(notes);
+      await navigator.clipboard.writeText(plainText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setError("Failed to copy. Please try manually selecting the text.");
+    }
   }
 
   return (
@@ -164,10 +204,11 @@ export default function AppPage() {
                 Your Notes
               </h2>
               <button
-                onClick={handleDownload}
-                className="text-xs font-medium text-zinc-500 transition-opacity hover:opacity-60 active:opacity-50 py-1 px-2 -mr-2"
+                onClick={handleCopy}
+                className="flex items-center gap-1.5 text-xs font-medium text-zinc-500 transition-opacity hover:opacity-60 active:opacity-50 py-1 px-2 -mr-2"
               >
-                Download .txt
+                <span>📋</span>
+                <span>{copied ? "Copied!" : "Copy"}</span>
               </button>
             </div>
             <div className="p-4 sm:p-6 rounded-md border border-zinc-200 bg-zinc-50">

@@ -23,7 +23,7 @@ I also used this project to develop my ability to collaborate with AI as a learn
 3. System extracts the video transcript using yt-dlp
 4. System sends the transcript to OpenAI with an intent-specific prompt
 5. User receives formatted notes tailored to their selected intent
-6. User can download the notes as a text file
+6. User can copy the notes to clipboard for use in any application
 
 That's the entire loop. No accounts, no databases, no extra features.
 
@@ -39,6 +39,8 @@ The architecture is straightforward:
 - Note generation via OpenAI's API. Each intent (learn, reference, action, skim) has a dedicated system prompt that shapes how the model structures the output.
 
 **Data Flow**: URL and intent go in, notes come out. There's no persistence layer. The transcript is processed in memory and discarded after the response is sent.
+
+**Output Format**: Notes are generated in Markdown format by OpenAI and displayed as-is in the UI. When copied to clipboard, the notes are automatically converted to plain text with Unicode formatting (bullet points, clean headers) for maximum compatibility across applications like Word, Google Docs, Apple Notes, etc.
 
 **Error Handling**: The API distinguishes between user errors (invalid URL, missing captions) and system errors (API failures), returning appropriate status codes and messages that surface clearly in the UI.
 
@@ -68,7 +70,7 @@ To run this project locally, you'll need:
 
 **What I intentionally did not build:**
 
-- **User accounts and saved notes**: Would require a database, authentication, and significantly more complexity. The value of this tool is in the transformation, not in storage. Users can download their notes.
+- **User accounts and saved notes**: Would require a database, authentication, and significantly more complexity. The value of this tool is in the transformation, not in storage. Users can copy their notes to any application they prefer.
 
 - **Video metadata display (title, thumbnail, duration)**: Adds visual polish but doesn't improve the core function. Would require additional API calls and state management.
 
