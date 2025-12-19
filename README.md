@@ -2,6 +2,8 @@
 
 A tool that converts YouTube videos into structured, intent-based notes. Paste a link, choose how you want to consume the content, and get notes tailored to your goal.
 
+🔗 **[Live Demo](https://notetube.up.railway.app/)**
+
 ## Overview
 
 Watching a 30-minute video to extract a few key points is inefficient. This project solves that by pulling the transcript from any YouTube video and transforming it into notes shaped by what you actually need: studying, quick reference, step-by-step instructions, or just a fast summary.
