@@ -22,9 +22,14 @@ import OpenAI from "openai";
 
 export type Intent = "learn" | "reference" | "action" | "skim";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+/**
+ * Get or create OpenAI client (lazy initialization)
+ */
+function getOpenAIClient() {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 /**
  * Intent-specific system prompts.
@@ -70,6 +75,7 @@ export async function generateNotes(
   intent: Intent
 ): Promise<string> {
   try {
+    const openai = getOpenAIClient();
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
