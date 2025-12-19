@@ -61,20 +61,20 @@ export default function AppPage() {
 
       {/* Header — Minimal, just navigation back */}
       <header className="border-b border-zinc-100">
-        <div className="mx-auto max-w-2xl px-6 py-5">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 py-4 sm:py-5">
           <Link
             href="/"
-            className="text-sm font-medium text-zinc-900 transition-opacity hover:opacity-60"
+            className="inline-block text-sm font-medium text-zinc-900 transition-opacity hover:opacity-60 active:opacity-50 py-1"
           >
             NoteTube
           </Link>
         </div>
       </header>
 
-      <main className="mx-auto max-w-2xl px-6 py-12 sm:py-16">
+      <main className="mx-auto max-w-2xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
 
         {/* Page Title */}
-        <div className="mb-10">
+        <div className="mb-8 sm:mb-10">
           <h1 className="text-xl sm:text-2xl font-semibold text-zinc-900 tracking-tight">
             Generate Notes
           </h1>
@@ -83,13 +83,13 @@ export default function AppPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
 
           {/* URL Input */}
           <div>
             <label
               htmlFor="url"
-              className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-3"
+              className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2 sm:mb-3"
             >
               YouTube URL
             </label>
@@ -100,25 +100,25 @@ export default function AppPage() {
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://www.youtube.com/watch?v=..."
               required
-              className="w-full px-4 py-3 rounded-md border border-zinc-200 bg-white text-zinc-900 text-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-shadow"
+              className="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-md border border-zinc-200 bg-white text-zinc-900 text-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-shadow"
             />
           </div>
 
           {/* Intent Selection */}
           <div>
-            <label className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-3">
+            <label className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2 sm:mb-3">
               Intent
             </label>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-4">
               {intentOptions.map((option) => (
                 <button
                   key={option.value}
                   type="button"
                   onClick={() => setIntent(option.value)}
-                  className={`p-3 rounded-md border text-left transition-all ${
+                  className={`p-2.5 sm:p-3 rounded-md border text-left transition-all active:scale-95 ${
                     intent === option.value
                       ? "border-zinc-900 bg-zinc-900"
-                      : "border-zinc-200 hover:border-zinc-300"
+                      : "border-zinc-200 hover:border-zinc-300 active:border-zinc-400"
                   }`}
                 >
                   <span
@@ -148,7 +148,7 @@ export default function AppPage() {
           <button
             type="submit"
             disabled={loading || !url}
-            className="w-full py-3 px-4 rounded-md bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full py-3 sm:py-3.5 px-4 rounded-md bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80 active:opacity-70 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {loading ? "Generating..." : "Generate Notes"}
           </button>
@@ -156,27 +156,27 @@ export default function AppPage() {
 
         {/* Error Display */}
         {error && (
-          <div className="mt-8 p-4 rounded-md bg-red-50 border border-red-200">
+          <div className="mt-6 sm:mt-8 p-3 sm:p-4 rounded-md bg-red-50 border border-red-200">
             <p className="text-sm text-red-600">{error}</p>
           </div>
         )}
 
         {/* Notes Display */}
         {notes && (
-          <div className="mt-12">
-            <div className="flex items-center justify-between mb-4">
+          <div className="mt-8 sm:mt-12">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
               <h2 className="text-xs font-medium text-zinc-500 uppercase tracking-widest">
                 Your Notes
               </h2>
               <button
                 onClick={handleDownload}
-                className="text-xs font-medium text-zinc-500 transition-opacity hover:opacity-60"
+                className="text-xs font-medium text-zinc-500 transition-opacity hover:opacity-60 active:opacity-50 py-1 px-2 -mr-2"
               >
                 Download .txt
               </button>
             </div>
-            <div className="p-6 rounded-md border border-zinc-200 bg-zinc-50">
-              <pre className="whitespace-pre-wrap text-sm text-zinc-700 leading-relaxed font-[family-name:var(--font-geist-sans)]">
+            <div className="p-4 sm:p-6 rounded-md border border-zinc-200 bg-zinc-50">
+              <pre className="whitespace-pre-wrap text-sm text-zinc-700 leading-relaxed font-[family-name:var(--font-geist-sans)] break-words">
                 {notes}
               </pre>
             </div>

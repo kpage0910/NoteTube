@@ -5,11 +5,11 @@ export default function Home() {
     <div className="min-h-screen bg-white font-[family-name:var(--font-geist-sans)]">
       {/* Navigation — Minimal header with logo and CTA */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-zinc-100">
-        <div className="mx-auto max-w-5xl px-6 h-14 flex items-center justify-between">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 h-14 flex items-center justify-between">
           <span className="text-sm font-semibold text-zinc-900">NoteTube</span>
           <Link
             href="/app"
-            className="px-4 py-1.5 rounded-md bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80"
+            className="px-4 py-2 rounded-md bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80 active:opacity-70"
           >
             Try it free
           </Link>
@@ -18,7 +18,7 @@ export default function Home() {
 
       <main>
         {/* Hero — Large headline, clear value prop, primary CTA */}
-        <section className="mx-auto max-w-3xl px-6 pt-20 pb-24 sm:pt-28 sm:pb-32 text-center">
+        <section className="mx-auto max-w-3xl px-4 sm:px-6 pt-16 pb-20 sm:pt-28 sm:pb-32 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-zinc-900 tracking-tight leading-tight">
             Turn YouTube videos into
             <br className="hidden sm:block" />
@@ -28,16 +28,16 @@ export default function Home() {
             Stop rewatching. Get notes tailored to how you actually want to use
             the content.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <Link
               href="/app"
-              className="px-6 py-3 rounded-lg bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80"
+              className="w-full sm:w-auto px-6 py-3 rounded-lg bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80 active:opacity-70 text-center"
             >
               Try NoteTube — it&apos;s free
             </Link>
             <a
               href="#how-it-works"
-              className="px-6 py-3 rounded-lg text-zinc-600 text-sm font-medium transition-colors hover:text-zinc-900"
+              className="w-full sm:w-auto px-6 py-3 rounded-lg text-zinc-600 text-sm font-medium transition-colors hover:text-zinc-900 active:text-zinc-900 text-center"
             >
               See how it works
             </a>
@@ -46,7 +46,7 @@ export default function Home() {
 
         {/* Problem Statement — Subtle background, centered text */}
         <section className="bg-zinc-50 border-y border-zinc-100">
-          <div className="mx-auto max-w-2xl px-6 py-16 sm:py-20 text-center">
+          <div className="mx-auto max-w-2xl px-4 sm:px-6 py-12 sm:py-16 lg:py-20 text-center">
             <p className="text-base sm:text-lg text-zinc-600 leading-relaxed">
               Most videos take longer to watch than the information inside them
               deserves. People come to videos with different goals—learning
@@ -59,12 +59,12 @@ export default function Home() {
         {/* How It Works — Three-step grid with numbered cards */}
         <section
           id="how-it-works"
-          className="mx-auto max-w-5xl px-6 py-20 sm:py-28"
+          className="mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20 lg:py-28"
         >
-          <h2 className="text-xs font-medium text-zinc-400 uppercase tracking-widest text-center mb-12">
+          <h2 className="text-xs font-medium text-zinc-400 uppercase tracking-widest text-center mb-8 sm:mb-12">
             How it works
           </h2>
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 sm:grid-cols-3">
             {[
               {
                 step: "1",
@@ -99,11 +99,11 @@ export default function Home() {
         </section>
 
         {/* Intent Types — Feature cards grid */}
-        <section className="mx-auto max-w-5xl px-6 pb-20 sm:pb-28">
-          <h2 className="text-xs font-medium text-zinc-400 uppercase tracking-widest text-center mb-12">
+        <section className="mx-auto max-w-5xl px-4 sm:px-6 pb-16 sm:pb-20 lg:pb-28">
+          <h2 className="text-xs font-medium text-zinc-400 uppercase tracking-widest text-center mb-8 sm:mb-12">
             Choose your intent
           </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               {
                 name: "Learn",
@@ -140,7 +140,7 @@ export default function Home() {
 
         {/* Final CTA — Simple centered section */}
         <section className="bg-zinc-50 border-t border-zinc-100">
-          <div className="mx-auto max-w-3xl px-6 py-20 sm:py-28 text-center">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 py-16 sm:py-20 lg:py-28 text-center">
             <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 tracking-tight mb-4">
               Ready to try it?
             </h2>
@@ -149,7 +149,7 @@ export default function Home() {
             </p>
             <Link
               href="/app"
-              className="inline-block px-6 py-3 rounded-lg bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80"
+              className="inline-block w-full sm:w-auto px-6 py-3 rounded-lg bg-zinc-900 text-white text-sm font-medium transition-opacity hover:opacity-80 active:opacity-70"
             >
               Try NoteTube — it&apos;s free
             </Link>
@@ -159,7 +159,7 @@ export default function Home() {
 
       {/* Footer — Minimal */}
       <footer className="border-t border-zinc-100">
-        <div className="mx-auto max-w-5xl px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           <span className="text-sm text-zinc-400">NoteTube</span>
           <span className="text-sm text-zinc-400">Built for learners.</span>
         </div>
