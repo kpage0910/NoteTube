@@ -3,18 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 
-type Intent = "learn" | "reference" | "action" | "skim";
+type Intent = "learn" | "reference" | "action" | "overview";
+type VideoType = "educational" | "entertainment";
 
 const intentOptions: { value: Intent; label: string; description: string }[] = [
   { value: "learn", label: "Learn", description: "Understand the material" },
   { value: "reference", label: "Reference", description: "Find facts quickly" },
   { value: "action", label: "Action", description: "Follow step-by-step" },
-  { value: "skim", label: "Overview", description: "Get the main points" },
+  { value: "overview", label: "Overview", description: "Get the main points" },
 ];
 
 export default function AppPage() {
   const [url, setUrl] = useState("");
   const [intent, setIntent] = useState<Intent>("learn");
+  const [videoType, setVideoType] = useState<VideoType>("educational");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -63,7 +65,7 @@ export default function AppPage() {
       const response = await fetch("/api/generate-notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, intent }),
+        body: JSON.stringify({ url, intent, videoType }),
       });
 
       const data = await response.json();
@@ -139,6 +141,58 @@ export default function AppPage() {
               required
               className="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-md border border-zinc-200 bg-white text-zinc-900 text-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-shadow"
             />
+          </div>
+
+          {/* Video Type Selection */}
+          <div>
+            <label className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2 sm:mb-3">
+              What type of video is this?
+            </label>
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              <button
+                type="button"
+                onClick={() => setVideoType("educational")}
+                className={`p-2.5 sm:p-3 rounded-md border-2 text-center transition-all active:scale-95 ${
+                  videoType === "educational"
+                    ? "border-zinc-900 bg-white"
+                    : "border-zinc-200 bg-white hover:border-zinc-300 active:border-zinc-400"
+                }`}
+              >
+                <span
+                  className={`block text-sm font-medium ${
+                    videoType === "educational"
+                      ? "text-zinc-900"
+                      : "text-zinc-600"
+                  }`}
+                >
+                  Educational
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setVideoType("entertainment")}
+                className={`p-2.5 sm:p-3 rounded-md border-2 text-center transition-all active:scale-95 ${
+                  videoType === "entertainment"
+                    ? "border-zinc-900 bg-white"
+                    : "border-zinc-200 bg-white hover:border-zinc-300 active:border-zinc-400"
+                }`}
+              >
+                <span
+                  className={`block text-sm font-medium ${
+                    videoType === "entertainment"
+                      ? "text-zinc-900"
+                      : "text-zinc-600"
+                  }`}
+                >
+                  Entertainment
+                </span>
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-zinc-500">
+              {videoType === "educational"
+                ? "Educational includes tutorials, lessons, how-tos, advice, and informational content"
+                : "Entertainment includes vlogs, gaming, storytelling, lifestyle content, and casual videos"}
+            </p>
           </div>
 
           {/* Intent Selection */}
