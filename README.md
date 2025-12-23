@@ -6,9 +6,9 @@ A tool that converts YouTube videos into structured, intent-based notes. Paste a
 
 ## Overview
 
-Watching a 30-minute video to extract a few key points is inefficient. This project solves that by pulling the transcript from any YouTube video and transforming it into notes shaped by what you actually need: studying, quick reference, step-by-step instructions, or just a fast summary.
+Watching a 30-minute video to extract a few key points is inefficient. This project solves that by pulling the transcript from any YouTube video and transforming it into notes shaped by what you actually need: studying, step-by-step instructions, or just a fast summary.
 
-The idea is simple: the same video content serves different purposes depending on your intent. A tutorial watched for learning requires different notes than the same tutorial used as a reference later. This tool makes that distinction explicit.
+The idea is simple: the same video content serves different purposes depending on your intent. A tutorial watched for learning requires different notes than the same tutorial used as a quick overview later. This tool makes that distinction explicit.
 
 ## Why This Project
 
@@ -21,7 +21,7 @@ I also used this project to develop my ability to collaborate with AI as a learn
 ## Core User Flow
 
 1. User pastes a YouTube URL
-2. User selects an intent: Learn, Reference, Action, or Skim
+2. User selects an intent: Learn, Action, or Overview
 3. System extracts the video transcript using yt-dlp
 4. System sends the transcript to OpenAI with an intent-specific prompt
 5. User receives formatted notes tailored to their selected intent
@@ -35,10 +35,10 @@ The architecture is straightforward:
 
 **Frontend**: A single React page built with Next.js. Handles the form input, intent selection, loading states, error display, and note rendering. No client-side routing, no state management libraries. Just React hooks and a form submission.
 
-**Backend**: A single API route (\`/api/generate-notes\`) that orchestrates the two core operations:
+**Backend**: A single API route (`/api/generate-notes`) that orchestrates the two core operations:
 
-- Transcript extraction via \`yt-dlp\`, a command-line tool that pulls subtitles from YouTube. The system downloads English captions (both manual and auto-generated), matches multiple English language variants (en, en-US, en-GB, en-orig), and falls back to other available languages if English isn't available. Temporary VTT files are cleaned up after processing.
-- Note generation via OpenAI's API. Each intent (learn, reference, action, skim) has a dedicated system prompt that shapes how the model structures the output.
+- Transcript extraction via `yt-dlp`, a command-line tool that pulls subtitles from YouTube. The system downloads English captions (both manual and auto-generated), matches multiple English language variants (en, en-US, en-GB, en-orig), and falls back to other available languages if English isn't available. Temporary VTT files are cleaned up after processing.
+- Note generation via OpenAI's API. Each intent (learn, action, overview) has a dedicated system prompt that shapes how the model structures the output.
 
 **Data Flow**: URL and intent go in, notes come out. There's no persistence layer. The transcript is processed in memory and discarded after the response is sent.
 
@@ -80,7 +80,7 @@ To run this project locally, you'll need:
 
 - **Streaming responses**: Would improve perceived performance for long notes, but adds complexity to both the API and frontend. For a tool generating a few hundred words, the tradeoff wasn't worth it at this stage.
 
-- **Custom intent prompts**: Users could theoretically want to define their own note format. I chose to constrain the options to four well-defined intents. Constraints often make tools more useful, not less.
+- **Custom intent prompts**: Users could theoretically want to define their own note format. I chose to constrain the options to three well-defined intents. Constraints often make tools more useful, not less.
 
 **What I chose to prioritize:**
 

@@ -5,7 +5,7 @@
  * It connects the frontend to the transcript extraction and note generation logic.
  *
  * Flow:
- * 1. Receives a YouTube URL and user intent (learn, reference, action, overview)
+ * 1. Receives a YouTube URL and user intent (learn, action, overview)
  * 2. Rate limits requests (5 per minute per IP) to prevent API abuse
  * 3. Validates the input
  * 4. Calls getTranscript() to extract the video's captions
@@ -18,10 +18,9 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { getTranscript } from "@/lib/transcript";
-import { generateNotes, Intent, VideoType } from "@/lib/notes";
+import { generateNotes, Intent } from "@/lib/notes";
 
-const validIntents: Intent[] = ["learn", "reference", "action", "overview"];
-const validVideoTypes: VideoType[] = ["educational", "entertainment"];
+const validIntents: Intent[] = ["learn", "action", "overview"];
 
 // Simple in-memory rate limiting
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -60,7 +59,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { url, intent, videoType } = body;
+    const { url, intent } = body;
 
     // Validate input
     if (!url || typeof url !== "string") {
@@ -73,34 +72,17 @@ export async function POST(request: NextRequest) {
     if (!intent || !validIntents.includes(intent)) {
       return NextResponse.json(
         {
-          error:
-            "Valid intent is required (learn, reference, action, overview)",
+          error: "Valid intent is required (learn, action, overview)",
         },
         { status: 400 }
       );
-    }
-
-    // Validate video type (required for overview intent)
-    if (intent === "overview") {
-      if (!videoType || !validVideoTypes.includes(videoType)) {
-        return NextResponse.json(
-          {
-            error: "Video type is required (educational or entertainment)",
-          },
-          { status: 400 }
-        );
-      }
     }
 
     // Get transcript
     const transcript = await getTranscript(url);
 
     // Generate notes
-    const notes = await generateNotes(
-      transcript,
-      intent as Intent,
-      videoType as VideoType
-    );
+    const notes = await generateNotes(transcript, intent as Intent);
 
     return NextResponse.json({ notes });
   } catch (error) {

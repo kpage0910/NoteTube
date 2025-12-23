@@ -3,12 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 
-type Intent = "learn" | "reference" | "action" | "overview";
-type VideoType = "educational" | "entertainment";
+type Intent = "learn" | "action" | "overview";
 
 const intentOptions: { value: Intent; label: string; description: string }[] = [
   { value: "learn", label: "Learn", description: "Understand the material" },
-  { value: "reference", label: "Reference", description: "Find facts quickly" },
   { value: "action", label: "Action", description: "Follow step-by-step" },
   { value: "overview", label: "Overview", description: "Get the main points" },
 ];
@@ -16,7 +14,6 @@ const intentOptions: { value: Intent; label: string; description: string }[] = [
 export default function AppPage() {
   const [url, setUrl] = useState("");
   const [intent, setIntent] = useState<Intent>("learn");
-  const [videoType, setVideoType] = useState<VideoType>("educational");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -65,7 +62,7 @@ export default function AppPage() {
       const response = await fetch("/api/generate-notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, intent, videoType }),
+        body: JSON.stringify({ url, intent }),
       });
 
       const data = await response.json();
@@ -132,67 +129,34 @@ export default function AppPage() {
             >
               YouTube URL
             </label>
-            <input
-              type="url"
-              id="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://www.youtube.com/watch?v=..."
-              required
-              className="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-md border border-zinc-200 bg-white text-zinc-900 text-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-shadow"
-            />
-          </div>
-
-          {/* Video Type Selection */}
-          <div>
-            <label className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2 sm:mb-3">
-              What type of video is this?
-            </label>
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
-              <button
-                type="button"
-                onClick={() => setVideoType("educational")}
-                className={`p-2.5 sm:p-3 rounded-md border-2 text-center transition-all active:scale-95 ${
-                  videoType === "educational"
-                    ? "border-zinc-900 bg-white"
-                    : "border-zinc-200 bg-white hover:border-zinc-300 active:border-zinc-400"
-                }`}
-              >
-                <span
-                  className={`block text-sm font-medium ${
-                    videoType === "educational"
-                      ? "text-zinc-900"
-                      : "text-zinc-600"
-                  }`}
+            <div className="relative">
+              <input
+                type="url"
+                id="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+                required
+                className="w-full px-3 sm:px-4 py-3 sm:py-3.5 pr-10 rounded-md border border-zinc-200 bg-white text-zinc-900 text-sm placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-shadow"
+              />
+              {url && (
+                <button
+                  type="button"
+                  onClick={() => setUrl("")}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 transition-colors"
+                  aria-label="Clear URL"
                 >
-                  Educational
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setVideoType("entertainment")}
-                className={`p-2.5 sm:p-3 rounded-md border-2 text-center transition-all active:scale-95 ${
-                  videoType === "entertainment"
-                    ? "border-zinc-900 bg-white"
-                    : "border-zinc-200 bg-white hover:border-zinc-300 active:border-zinc-400"
-                }`}
-              >
-                <span
-                  className={`block text-sm font-medium ${
-                    videoType === "entertainment"
-                      ? "text-zinc-900"
-                      : "text-zinc-600"
-                  }`}
-                >
-                  Entertainment
-                </span>
-              </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                  </svg>
+                </button>
+              )}
             </div>
-            <p className="mt-2 text-xs text-zinc-500">
-              {videoType === "educational"
-                ? "Educational includes tutorials, lessons, how-tos, advice, and informational content"
-                : "Entertainment includes vlogs, gaming, storytelling, lifestyle content, and casual videos"}
-            </p>
           </div>
 
           {/* Intent Selection */}
@@ -200,7 +164,7 @@ export default function AppPage() {
             <label className="block text-xs font-medium text-zinc-500 uppercase tracking-widest mb-2 sm:mb-3">
               Intent
             </label>
-            <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {intentOptions.map((option) => (
                 <button
                   key={option.value}

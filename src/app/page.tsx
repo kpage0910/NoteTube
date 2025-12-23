@@ -102,16 +102,12 @@ export default function Home() {
           <h2 className="text-xs font-medium text-zinc-400 uppercase tracking-widest text-center mb-8 sm:mb-12">
             Choose your intent
           </h2>
-          <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:gap-4 sm:grid-cols-3">
             {[
               {
                 name: "Learn",
                 description:
                   "Understand the material with explanations and examples",
-              },
-              {
-                name: "Reference",
-                description: "Find facts, definitions, and key points quickly",
               },
               {
                 name: "Action",
